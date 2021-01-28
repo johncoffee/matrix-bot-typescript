@@ -1,3 +1,5 @@
 {
-  "baseUrl": "https://www.yr.no"
+  "baseUrl": "https://www.yr.no",
+  "video": false,
+  "screenshotOnRunFailure": false
 }
