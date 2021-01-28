@@ -1,10 +1,7 @@
-import {
-  MatrixClient,
-  SimpleFsStorageProvider,
-  AutojoinRoomsMixin,
-  RichReply,
-} from 'matrix-bot-sdk'
-import { readFileSync, appendFile } from 'fs'
+import { AutojoinRoomsMixin, MatrixClient, SimpleFsStorageProvider, } from 'matrix-bot-sdk'
+import { appendFile, readFileSync } from 'fs'
+import { ensureDirSync, move, readdir, readJSON } from 'fs-extra'
+import { getWeather } from './yr.no-api'
 
 // where you would point a client to talk to a homeserver
 const homeserverUrl = 'https://matrix.org'
@@ -15,63 +12,72 @@ const accessToken = readFileSync(__dirname + '/../tmp/access_token.txt').toStrin
 // We'll want to make sure the bot doesn't have to do an initial sync every
 // time it restarts, so we need to prepare a storage provider. Here we use
 // a simple JSON database.
-const storage = new SimpleFsStorageProvider('hello-bot.json')
+ensureDirSync(__dirname + '/data')
+const storage = new SimpleFsStorageProvider('data/hello-bot.json')
 
 // Now we can create the client and set it up to automatically join rooms.
 const client = new MatrixClient(homeserverUrl, accessToken, storage)
 AutojoinRoomsMixin.setupOnClient(client)
+client.start().then(() => {
+  logger('Client started.')
+})
 
-// To listen for room messages (m.room.message) only:
-client.on('room.message', async (roomId, event) => {
+client.on('room.message', (roomId, event) => {
   if (!event.content?.body) return
 
   logger(event['sender'] + ' says ' + event.content?.body)
 
-  // client.sendMessage(roomId, {
-  //   "msgtype": "m.notice",
-  //   "body": "hello!",
-  // });
-
-  if (event.content.body.startsWith('!hello')) {
-    const res = await client.sendNotice(roomId, 'Hello you')
-    logger(res)
+  if (event.content.body.startsWith('!vejret')) {
+    // init stuff
+    getForecast(roomId)
   }
-
 })
 
-// Now that the client is all set up and the event handler is registered, start the
-// client up. This will start it syncing.
-client.start().then(() => logger('Client started!'))
+async function getForecast (roomId) {
+  const latest = await getWeather()
+  try {
+    await client.sendHtmlText(roomId,
+      `
+      <p>5 day summary:</p>
+       ${latest
+        .map(day => Object.entries(day).map(([v, k]) =>
+            `${k} ${v}`
+          ).join('. ')
+        )
+        .join('<br>')
+      }
+     )}    
+`)
+  } catch (err) {
+    logger('Weather job failed')
+    logger(err)
+    await client.sendNotice(roomId, 'Failed job: ' + err)
+  }
+}
 
-// This is our event handler for dealing with the `!hello` command.
-async function handleCommand (roomId, event) {
-  // Don't handle events that don't have contents (they were probably redacted)
-  if (!event['content']) return logger('no content?')
+async function runOtherJob2 (roomId, delay: number = 2000) {
+  try {
+    await client.sendNotice(roomId, 'Running job...')
+    // if (Math.random() > .2) {
+    //   await client.sendText(roomId, 'It was a nice.')
+    // }
+    const goodForecasts = await readdir(__dirname + '/inbox/good')
+    if (Array.isArray(goodForecasts) && goodForecasts.length) {
+      const f = goodForecasts.pop()
+      const latest = await readJSON(__dirname + '/inbox/good/' + f)
+      await client.sendHtmlText(roomId, `<pre>${JSON.stringify(latest, null, '  ')}</pre>`)
+      await move(__dirname + '/inbox/good/' + f, __dirname + '/inbox/read/' + f)
+    }
+  } catch (e) {
+    logger('Stopped job!')
+    logger(e)
+    return
+  }
 
-  // Don't handle non-text events
-  if (event['content']['msgtype'] !== 'm.text') return
-
-  // We never send `m.text` messages so this isn't required, however this is
-  // how you would filter out events sent by the bot itself.
-  if (event['sender'] === await client.getUserId()) return
-
-  // Make sure that the event looks like a command we're expecting
-
-  logger('event.content')
-  logger(event.content)
-
-  const body = event['content']['body']
-  if (!body || !body.startsWith('!hello')) return
-
-  // If we've reached this point, we can safely execute the command. We'll
-  // send a reply to the user's command saying "Hello World!".
-  const replyBody = 'Hello World!' // we don't have any special styling to do.
-  const reply = RichReply.createFor(roomId, event, replyBody, replyBody)
-  reply['msgtype'] = 'm.notice'
-  client.sendMessage(roomId, reply)
+  setTimeout(() => runOtherJob2(roomId, delay), delay)
 }
 
 function logger (msg: string) {
-  appendFile(__dirname+'/../tmp/log.txt',
-    new Date().toJSON() + " " + JSON.stringify(msg,null,'  ') + "\n", console.error)
+  appendFile(__dirname + '/../tmp/log.txt',
+    new Date().toJSON() + ' ' + JSON.stringify(msg, null, '  ') + '\n', console.error)
 }

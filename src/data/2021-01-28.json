@@ -1,0 +1,408 @@
+[
+  {
+    "datatype": "forecast",
+    "from": "2021-01-28T16:00:00Z",
+    "to": "2021-01-28T16:00:00Z",
+    "icon": "LightCloud",
+    "rain": "0.0 mm",
+    "rainDetails": {
+      "minRain": "0.0",
+      "maxRain": "0.0",
+      "rain": "0.0",
+      "unit": "mm"
+    },
+    "altitude": "4",
+    "latitude": "55.6772",
+    "longitude": "12.589",
+    "temperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-0.7"
+    },
+    "windDirection": {
+      "id": "dd",
+      "deg": "337.1",
+      "name": "NW"
+    },
+    "windSpeed": {
+      "id": "ff",
+      "mps": "5.1",
+      "beaufort": "3",
+      "name": "Lett bris"
+    },
+    "windGust": {
+      "id": "ff_gust",
+      "mps": "10.5"
+    },
+    "humidity": {
+      "unit": "percent",
+      "value": "72.5"
+    },
+    "pressure": {
+      "id": "pr",
+      "unit": "hPa",
+      "value": "1002.5"
+    },
+    "cloudiness": {
+      "id": "NN",
+      "percent": "27.8"
+    },
+    "fog": {
+      "id": "FOG",
+      "percent": "0.0"
+    },
+    "lowClouds": {
+      "id": "LOW",
+      "percent": "27.7"
+    },
+    "mediumClouds": {
+      "id": "MEDIUM",
+      "percent": "0.0"
+    },
+    "highClouds": {
+      "id": "HIGH",
+      "percent": "0.0"
+    },
+    "dewpointTemperature": {
+      "id": "TD",
+      "unit": "celsius",
+      "value": "-5.3"
+    }
+  },
+  {
+    "datatype": "forecast",
+    "from": "2021-01-29T12:00:00Z",
+    "to": "2021-01-29T12:00:00Z",
+    "icon": "PartlyCloud",
+    "rain": "0.0 mm",
+    "rainDetails": {
+      "minRain": "0.0",
+      "maxRain": "0.0",
+      "rain": "0.0",
+      "unit": "mm"
+    },
+    "minTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-2.6"
+    },
+    "maxTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-2.0"
+    },
+    "altitude": "4",
+    "latitude": "55.6772",
+    "longitude": "12.589",
+    "temperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-2.0"
+    },
+    "windDirection": {
+      "id": "dd",
+      "deg": "36.7",
+      "name": "NE"
+    },
+    "windSpeed": {
+      "id": "ff",
+      "mps": "3.2",
+      "beaufort": "2",
+      "name": "Svak vind"
+    },
+    "windGust": {
+      "id": "ff_gust",
+      "mps": "6.0"
+    },
+    "humidity": {
+      "unit": "percent",
+      "value": "75.6"
+    },
+    "pressure": {
+      "id": "pr",
+      "unit": "hPa",
+      "value": "999.1"
+    },
+    "cloudiness": {
+      "id": "NN",
+      "percent": "80.0"
+    },
+    "fog": {
+      "id": "FOG",
+      "percent": "0.0"
+    },
+    "lowClouds": {
+      "id": "LOW",
+      "percent": "0.3"
+    },
+    "mediumClouds": {
+      "id": "MEDIUM",
+      "percent": "59.2"
+    },
+    "highClouds": {
+      "id": "HIGH",
+      "percent": "51.1"
+    },
+    "temperatureProbability": {
+      "unit": "probabilitycode",
+      "value": "0"
+    },
+    "windProbability": {
+      "unit": "probabilitycode",
+      "value": "0"
+    },
+    "dewpointTemperature": {
+      "id": "TD",
+      "unit": "celsius",
+      "value": "-6.0"
+    }
+  },
+  {
+    "datatype": "forecast",
+    "from": "2021-01-30T12:00:00Z",
+    "to": "2021-01-30T12:00:00Z",
+    "icon": "PartlyCloud",
+    "rain": "0.0 mm",
+    "rainDetails": {
+      "minRain": "0.0",
+      "maxRain": "0.0",
+      "rain": "0.0",
+      "unit": "mm"
+    },
+    "minTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-2.2"
+    },
+    "maxTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "0.5"
+    },
+    "altitude": "4",
+    "latitude": "55.6772",
+    "longitude": "12.589",
+    "temperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "0.5"
+    },
+    "windDirection": {
+      "id": "dd",
+      "deg": "273.3",
+      "name": "W"
+    },
+    "windSpeed": {
+      "id": "ff",
+      "mps": "3.7",
+      "beaufort": "3",
+      "name": "Lett bris"
+    },
+    "windGust": {
+      "id": "ff_gust",
+      "mps": "7.0"
+    },
+    "humidity": {
+      "unit": "percent",
+      "value": "68.0"
+    },
+    "pressure": {
+      "id": "pr",
+      "unit": "hPa",
+      "value": "1001.1"
+    },
+    "cloudiness": {
+      "id": "NN",
+      "percent": "58.5"
+    },
+    "fog": {
+      "id": "FOG",
+      "percent": "0.0"
+    },
+    "lowClouds": {
+      "id": "LOW",
+      "percent": "58.5"
+    },
+    "mediumClouds": {
+      "id": "MEDIUM",
+      "percent": "0.1"
+    },
+    "highClouds": {
+      "id": "HIGH",
+      "percent": "0.0"
+    },
+    "temperatureProbability": {
+      "unit": "probabilitycode",
+      "value": "1"
+    },
+    "windProbability": {
+      "unit": "probabilitycode",
+      "value": "1"
+    },
+    "dewpointTemperature": {
+      "id": "TD",
+      "unit": "celsius",
+      "value": "-5.0"
+    }
+  },
+  {
+    "datatype": "forecast",
+    "from": "2021-01-31T12:00:00Z",
+    "to": "2021-01-31T12:00:00Z",
+    "icon": "LightCloud",
+    "rain": "0.0 mm",
+    "rainDetails": {
+      "minRain": "0.0",
+      "maxRain": "0.0",
+      "rain": "0.0",
+      "unit": "mm"
+    },
+    "minTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-0.2"
+    },
+    "maxTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "2.4"
+    },
+    "altitude": "4",
+    "latitude": "55.6772",
+    "longitude": "12.589",
+    "temperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "2.4"
+    },
+    "windDirection": {
+      "id": "dd",
+      "deg": "310.8",
+      "name": "NW"
+    },
+    "windSpeed": {
+      "id": "ff",
+      "mps": "4.2",
+      "beaufort": "3",
+      "name": "Lett bris"
+    },
+    "humidity": {
+      "unit": "percent",
+      "value": "72.7"
+    },
+    "pressure": {
+      "id": "pr",
+      "unit": "hPa",
+      "value": "998.6"
+    },
+    "cloudiness": {
+      "id": "NN",
+      "percent": "31.6"
+    },
+    "lowClouds": {
+      "id": "LOW",
+      "percent": "21.5"
+    },
+    "mediumClouds": {
+      "id": "MEDIUM",
+      "percent": "0.0"
+    },
+    "highClouds": {
+      "id": "HIGH",
+      "percent": "0.0"
+    },
+    "temperatureProbability": {
+      "unit": "probabilitycode",
+      "value": "0"
+    },
+    "windProbability": {
+      "unit": "probabilitycode",
+      "value": "1"
+    },
+    "dewpointTemperature": {
+      "id": "TD",
+      "unit": "celsius",
+      "value": "-2.3"
+    }
+  },
+  {
+    "datatype": "forecast",
+    "from": "2021-02-01T12:00:00Z",
+    "to": "2021-02-01T12:00:00Z",
+    "icon": "PartlyCloud",
+    "rain": "0.0 mm",
+    "rainDetails": {
+      "minRain": "0.0",
+      "maxRain": "0.0",
+      "rain": "0.0",
+      "unit": "mm"
+    },
+    "minTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "-0.6"
+    },
+    "maxTemperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "2.1"
+    },
+    "altitude": "4",
+    "latitude": "55.6772",
+    "longitude": "12.589",
+    "temperature": {
+      "id": "TTT",
+      "unit": "celsius",
+      "value": "2.1"
+    },
+    "windDirection": {
+      "id": "dd",
+      "deg": "296.1",
+      "name": "NW"
+    },
+    "windSpeed": {
+      "id": "ff",
+      "mps": "2.4",
+      "beaufort": "2",
+      "name": "Svak vind"
+    },
+    "humidity": {
+      "unit": "percent",
+      "value": "76.1"
+    },
+    "pressure": {
+      "id": "pr",
+      "unit": "hPa",
+      "value": "1001.4"
+    },
+    "cloudiness": {
+      "id": "NN",
+      "percent": "85.2"
+    },
+    "lowClouds": {
+      "id": "LOW",
+      "percent": "22.7"
+    },
+    "mediumClouds": {
+      "id": "MEDIUM",
+      "percent": "27.3"
+    },
+    "highClouds": {
+      "id": "HIGH",
+      "percent": "15.6"
+    },
+    "temperatureProbability": {
+      "unit": "probabilitycode",
+      "value": "1"
+    },
+    "windProbability": {
+      "unit": "probabilitycode",
+      "value": "1"
+    },
+    "dewpointTemperature": {
+      "id": "TD",
+      "unit": "celsius",
+      "value": "-1.9"
+    }
+  }
+]
