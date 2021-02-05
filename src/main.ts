@@ -1,7 +1,8 @@
 import { AutojoinRoomsMixin, MatrixClient, SimpleFsStorageProvider, } from 'matrix-bot-sdk'
 import { appendFile, readFileSync } from 'fs'
-import { ensureDirSync, move, readdir, readJSON } from 'fs-extra'
-import { getWeather } from './yr.no-api'
+import { ensureDirSync, readFile, remove } from 'fs-extra'
+import { join } from 'path'
+import execa from 'execa'
 
 // where you would point a client to talk to a homeserver
 const homeserverUrl = 'https://matrix.org'
@@ -12,72 +13,93 @@ const accessToken = readFileSync(__dirname + '/../tmp/access_token.txt').toStrin
 // We'll want to make sure the bot doesn't have to do an initial sync every
 // time it restarts, so we need to prepare a storage provider. Here we use
 // a simple JSON database.
-ensureDirSync(__dirname + '/data')
-const storage = new SimpleFsStorageProvider('data/hello-bot.json')
 
+const cacheDir = '/tmp/weatherbot-cache'
+ensureDirSync(cacheDir)
+
+// const storage = new SimpleFsStorageProvider(cacheDir + '/weather-bot.json')
+const storage = new SimpleFsStorageProvider(cacheDir + '/weather-bot.json')
 // Now we can create the client and set it up to automatically join rooms.
 const client = new MatrixClient(homeserverUrl, accessToken, storage)
 AutojoinRoomsMixin.setupOnClient(client)
-client.start().then(() => {
-  logger('Client started.')
+
+const rooms: string[] = []
+client.start().then(async () => {
+  rooms.push(...await client.getJoinedRooms())
+  rooms.forEach((roomId, i, arr) => {
+    client.sendNotice(roomId, 'bot started, rooms joined: ' + arr.join(', '))
+  })
+
+  rooms.forEach((roomId, i, arr) => {
+  })
+
 })
 
-client.on('room.message', (roomId, event) => {
-  if (!event.content?.body) return
+async function sendImage (path: string, roomId: string) {
+  // file="$1"
+  // 	content_type="$2"
+  // 	filename="$3"
+  // 	response=$( _curl -XPOST --data-binary "@$file" -H "Content-Type: $content_type" "${MATRIX_HOMESERVER}/_matrix/media/r0/upload?filename=${filename}" )
+  const buf = await readFile(path)
+  const urlMXC = await client.uploadContent(buf, 'image/png')
+  logger(urlMXC)
+  const content = {
+    'body': 'screenshot ',
+    'msgtype': 'm.image',
+    'url': urlMXC,
+  }
+  logger('sending img...')
 
-  logger(event['sender'] + ' says ' + event.content?.body)
+  await client.sendMessage(roomId, content)
+    .then(res => logger(res))
+    .catch(er => logger(er))
+}
 
-  if (event.content.body.startsWith('!vejret')) {
+const targetFile = join(__dirname, '/cypress/screenshots/getWeather.spec.js/get weather -- should take a screenshot.png')
+
+let refreshing: boolean = false
+
+client.on('room.message', async (roomId, event) => {
+  if (typeof event.content?.body !== 'string') return
+
+  // logger(event['sender'] + ' says ' + event.content?.body)
+  // logger(event.content.body)
+
+  if (event.content.body.startsWith('!latest')) {
     // init stuff
-    getForecast(roomId)
+    // await client.sendNotice(roomId, 'Running job...')
+    // await client.sendHtmlText(roomId, `<pre>${JSON.stringify(event, null, '  ')}</pre>`)
+    await sendImage(targetFile, roomId)
+  }
+  else if (event.content.body.startsWith('!weather cph')) {
+    if (!refreshing) {
+      refreshing = true
+      await refresh()
+      await sendImage(targetFile, roomId)
+    }
+  }
+
+  async function refresh () {
+    // init stuff
+    await remove(targetFile)
+    client.sendNotice(roomId, 'Running refresh...')
+
+    try {
+      execa('npx', ['cypress', 'run'], {
+        cwd: __dirname,
+        timeout: 15 * 1000,
+      })
+    } catch (error) {
+      client.sendNotice(roomId, 'Refresh failed.')
+      logger(error)
+      return
+    }
+
+    logger("Didn't fail :)")
   }
 })
 
-async function getForecast (roomId) {
-  const latest = await getWeather()
-  try {
-    await client.sendHtmlText(roomId,
-      `
-      <p>5 day summary:</p>
-       ${latest
-        .map(day => Object.entries(day).map(([v, k]) =>
-            `${k} ${v}`
-          ).join('. ')
-        )
-        .join('<br>')
-      }
-     )}    
-`)
-  } catch (err) {
-    logger('Weather job failed')
-    logger(err)
-    await client.sendNotice(roomId, 'Failed job: ' + err)
-  }
-}
-
-async function runOtherJob2 (roomId, delay: number = 2000) {
-  try {
-    await client.sendNotice(roomId, 'Running job...')
-    // if (Math.random() > .2) {
-    //   await client.sendText(roomId, 'It was a nice.')
-    // }
-    const goodForecasts = await readdir(__dirname + '/inbox/good')
-    if (Array.isArray(goodForecasts) && goodForecasts.length) {
-      const f = goodForecasts.pop()
-      const latest = await readJSON(__dirname + '/inbox/good/' + f)
-      await client.sendHtmlText(roomId, `<pre>${JSON.stringify(latest, null, '  ')}</pre>`)
-      await move(__dirname + '/inbox/good/' + f, __dirname + '/inbox/read/' + f)
-    }
-  } catch (e) {
-    logger('Stopped job!')
-    logger(e)
-    return
-  }
-
-  setTimeout(() => runOtherJob2(roomId, delay), delay)
-}
-
-function logger (msg: string) {
+function logger (msg: any) {
   appendFile(__dirname + '/../tmp/log.txt',
     new Date().toJSON() + ' ' + JSON.stringify(msg, null, '  ') + '\n', console.error)
 }
